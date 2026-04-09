@@ -488,7 +488,7 @@ def fetch_slots_for_submission(
     endpoint = urljoin(f"{config.base_url}/", f"api/events/{config.event_slug}/slots/")
     params = {
         "submission": submission_code,
-        "expand": "submission,room",
+        "expand": "submission,submission.speakers,room",
     }
     if schedule_id is not None:
         params["schedule"] = schedule_id
@@ -620,12 +620,19 @@ def _apply_slot_metadata(event: Event, code: str, slot: dict[str, Any]) -> None:
 
     speakers = _speaker_list(submission)
     abstract = _text_value(submission.get("abstract"))
+    talk_description = _text_value(submission.get("description"))
 
     description_parts = []
     if speakers:
         description_parts.append(f"Speakers: {speakers}")
     if abstract:
         description_parts.append(abstract)
+    if talk_description and talk_description != abstract:
+        description_parts.append(talk_description)
+
+    public_url = _public_submission_url(submission)
+    if public_url:
+        description_parts.append(f"Link: {public_url}")
 
     event.add("summary", title)
     event.add("description", "\n\n".join(description_parts) or f"Submission code: {code}")
@@ -634,7 +641,6 @@ def _apply_slot_metadata(event: Event, code: str, slot: dict[str, Any]) -> None:
     if room_name:
         event.add("location", room_name)
 
-    public_url = _public_submission_url(submission)
     if public_url:
         event.add("url", public_url)
 
@@ -664,26 +670,35 @@ def _text_value(value: Any) -> str:
 
 
 def _speaker_list(submission: dict[str, Any]) -> str:
-    speakers = submission.get("speakers")
     names: list[str] = []
 
+    speaker_names = submission.get("speaker_names")
+    if isinstance(speaker_names, str):
+        names.extend([name.strip() for name in speaker_names.split(",") if name.strip()])
+    elif isinstance(speaker_names, list):
+        for speaker_name in speaker_names:
+            text = _text_value(speaker_name)
+            if text:
+                names.append(text)
+
+    speakers = submission.get("speakers")
     if isinstance(speakers, list):
         for speaker in speakers:
-            if isinstance(speaker, dict):
-                name = _text_value(speaker.get("name"))
-            else:
-                name = _text_value(speaker)
+            if not isinstance(speaker, dict):
+                continue
+            name = _text_value(speaker.get("name"))
             if name:
                 names.append(name)
 
-    if not names:
-        speaker_names = submission.get("speaker_names")
-        if isinstance(speaker_names, str):
-            names.extend([name.strip() for name in speaker_names.split(",") if name.strip()])
-        elif isinstance(speaker_names, list):
-            names.extend([_text_value(name) for name in speaker_names if _text_value(name)])
+    deduplicated: list[str] = []
+    seen: set[str] = set()
+    for name in names:
+        if name in seen:
+            continue
+        seen.add(name)
+        deduplicated.append(name)
 
-    return ", ".join(names)
+    return ", ".join(deduplicated)
 
 
 def _room_name(room: Any) -> str:

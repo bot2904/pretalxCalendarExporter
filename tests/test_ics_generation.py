@@ -56,3 +56,45 @@ def test_build_calendar_multi_slot_series_and_cancelled_prefix() -> None:
     assert override.get("RECURRENCE-ID") is not None
     assert str(master.get("SUMMARY")).startswith("CANCELLED: ")
     assert str(master.get("STATUS")) == "CANCELLED"
+
+
+def test_build_calendar_uses_speaker_names_and_includes_description() -> None:
+    slots_by_code = {
+        "DEF456": [
+            {
+                "start": "2026-04-22T12:00:00+00:00",
+                "end": "2026-04-22T13:00:00+00:00",
+                "room": {"name": "Green Room"},
+                "submission": {
+                    "title": "Shipping Python Tools",
+                    "abstract": "A short abstract.",
+                    "description": "A longer talk description.",
+                    "state": "confirmed",
+                    "is_public": True,
+                    "speakers": ["S1", "S2"],
+                    "speaker_names": "Ada Lovelace, Grace Hopper",
+                    "url": "https://pretalx.example.org/demo26/talk/def456/",
+                },
+            }
+        ]
+    }
+
+    calendar = build_calendar(
+        base_url="https://pretalx.example.org",
+        event_slug="demo26",
+        timezone_name="Europe/Vienna",
+        slots_by_code=slots_by_code,
+    )
+
+    parsed = Calendar.from_ical(calendar.to_ical())
+    vevents = [component for component in parsed.walk() if component.name == "VEVENT"]
+    assert len(vevents) == 1
+
+    description = str(vevents[0].get("DESCRIPTION"))
+    assert "Speakers: Ada Lovelace, Grace Hopper" in description
+    assert "S1" not in description
+    assert "S2" not in description
+    assert "A short abstract." in description
+    assert "A longer talk description." in description
+    assert "Link: https://pretalx.example.org/demo26/talk/def456/" in description
+    assert str(vevents[0].get("URL")) == "https://pretalx.example.org/demo26/talk/def456/"

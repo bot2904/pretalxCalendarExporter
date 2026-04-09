@@ -96,3 +96,4 @@ def test_fetch_slots_for_submission_includes_schedule_filter() -> None:
     assert params is not None
     assert params["submission"] == "ABC123"
     assert params["schedule"] == 170
+    assert params["expand"] == "submission,submission.speakers,room"
