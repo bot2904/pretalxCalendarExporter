@@ -10,7 +10,7 @@ Exports a logged-in pretalx user's starred/favourited sessions to an `.ics` file
 - Loads favourites from:
   - `GET /api/events/{event}/submissions/favourites/`
 - Loads slot details per favourite from:
-  - `GET /api/events/{event}/slots/?submission=<code>&expand=submission,room`
+  - `GET /api/events/{event}/slots/?submission=<code>&expand=submission,room&schedule=<current_schedule_id>`
 - Generates an ICS calendar in the event timezone.
 - Includes title, room, speaker(s), description, and date/time.
 - Represents multi-slot submissions as a calendar series.
@@ -54,6 +54,18 @@ docker run --rm -v "$PWD:/workspace" pretalx-starred-exporter \
   --password super-secret
 ```
 
+Or pass configuration via environment variables (useful for CI/secrets):
+
+```bash
+docker run --rm -v "$PWD:/workspace" \
+  -e PRETALX_STARRED_EXPORT_BASE_URL=https://pretalx.example.org \
+  -e PRETALX_STARRED_EXPORT_EVENT_SLUG=demo26 \
+  -e PRETALX_STARRED_EXPORT_OUTPUT_PATH=/workspace/favourites.ics \
+  -e PRETALX_STARRED_EXPORT_USERNAME=attendee@example.org \
+  -e PRETALX_STARRED_EXPORT_PASSWORD=super-secret \
+  pretalx-starred-exporter
+```
+
 ## Configuration
 
 Default config path: `/workspace/.config.yml`
@@ -74,9 +86,25 @@ password: super-secret
 # cookie_name: pretalx_session
 ```
 
+Equivalent environment variables:
+
+- `PRETALX_STARRED_EXPORT_BASE_URL`
+- `PRETALX_STARRED_EXPORT_EVENT_SLUG`
+- `PRETALX_STARRED_EXPORT_OUTPUT_PATH`
+- `PRETALX_STARRED_EXPORT_USERNAME`
+- `PRETALX_STARRED_EXPORT_PASSWORD`
+- `PRETALX_STARRED_EXPORT_FIREFOX_PROFILE`
+- `PRETALX_STARRED_EXPORT_COOKIE_NAME`
+
+Configuration precedence is:
+
+1. CLI flags
+2. Environment variables
+3. YAML config file
+
 ## CLI usage
 
-CLI flags override config values:
+CLI flags override environment variables and config file values:
 
 ```bash
 uv run pretalx-starred-export \

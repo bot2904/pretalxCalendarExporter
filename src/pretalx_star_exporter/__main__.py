@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
+from collections.abc import Mapping
 from pathlib import Path
 
 from .exporter import (
@@ -16,6 +18,30 @@ from .exporter import (
 DEFAULT_CONFIG_PATH = Path("/workspace/.config.yml")
 
 
+ENV_VAR_MAP = {
+    "base_url": "PRETALX_STARRED_EXPORT_BASE_URL",
+    "event_slug": "PRETALX_STARRED_EXPORT_EVENT_SLUG",
+    "output_path": "PRETALX_STARRED_EXPORT_OUTPUT_PATH",
+    "username": "PRETALX_STARRED_EXPORT_USERNAME",
+    "password": "PRETALX_STARRED_EXPORT_PASSWORD",
+    "firefox_profile": "PRETALX_STARRED_EXPORT_FIREFOX_PROFILE",
+    "cookie_name": "PRETALX_STARRED_EXPORT_COOKIE_NAME",
+}
+
+
+def load_env_overrides(environ: Mapping[str, str] | None = None) -> dict[str, str]:
+    source = os.environ if environ is None else environ
+    overrides: dict[str, str] = {}
+
+    for config_key, env_var in ENV_VAR_MAP.items():
+        value = source.get(env_var)
+        if value is None or value == "":
+            continue
+        overrides[config_key] = value
+
+    return overrides
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Export pretalx starred sessions to an ICS file",
@@ -26,19 +52,49 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_CONFIG_PATH,
         help=f"Path to YAML config file (default: {DEFAULT_CONFIG_PATH})",
     )
-    parser.add_argument("--base-url", help="Pretalx base URL, e.g. https://pretalx.example.org")
-    parser.add_argument("--event-slug", help="Event slug, e.g. glt26")
-    parser.add_argument("--output-path", help="Where to write the generated ICS file")
-    parser.add_argument("--username", help="Pretalx username/email for web login")
-    parser.add_argument("--password", help="Pretalx password for web login")
+    parser.add_argument(
+        "--base-url",
+        help=(
+            "Pretalx base URL, e.g. https://pretalx.example.org "
+            "(env: PRETALX_STARRED_EXPORT_BASE_URL)"
+        ),
+    )
+    parser.add_argument(
+        "--event-slug",
+        help="Event slug, e.g. glt26 (env: PRETALX_STARRED_EXPORT_EVENT_SLUG)",
+    )
+    parser.add_argument(
+        "--output-path",
+        help=(
+            "Where to write the generated ICS file "
+            "(env: PRETALX_STARRED_EXPORT_OUTPUT_PATH)"
+        ),
+    )
+    parser.add_argument(
+        "--username",
+        help=(
+            "Pretalx username/email for web login "
+            "(env: PRETALX_STARRED_EXPORT_USERNAME)"
+        ),
+    )
+    parser.add_argument(
+        "--password",
+        help="Pretalx password for web login (env: PRETALX_STARRED_EXPORT_PASSWORD)",
+    )
     parser.add_argument(
         "--firefox-profile",
-        help="Firefox profile path containing cookies.sqlite (optional fallback)",
+        help=(
+            "Firefox profile path containing cookies.sqlite (optional fallback) "
+            "(env: PRETALX_STARRED_EXPORT_FIREFOX_PROFILE)"
+        ),
     )
     parser.add_argument(
         "--cookie-name",
         default=None,
-        help="Session cookie name (default: pretalx_session)",
+        help=(
+            "Session cookie name (default: pretalx_session) "
+            "(env: PRETALX_STARRED_EXPORT_COOKIE_NAME)"
+        ),
     )
     return parser
 
@@ -49,6 +105,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         file_config = load_yaml_config(args.config)
+        env_overrides = load_env_overrides()
         cli_overrides = {
             "base_url": args.base_url,
             "event_slug": args.event_slug,
@@ -58,7 +115,12 @@ def main(argv: list[str] | None = None) -> int:
             "firefox_profile": args.firefox_profile,
             "cookie_name": args.cookie_name,
         }
-        config = build_export_config(merged_config(file_config, cli_overrides))
+        config = build_export_config(
+            merged_config(
+                merged_config(file_config, env_overrides),
+                cli_overrides,
+            )
+        )
     except ConfigurationError as exc:
         print(f"Configuration error: {exc}", file=sys.stderr)
         return 2
