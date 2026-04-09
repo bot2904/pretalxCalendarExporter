@@ -1,0 +1,100 @@
+name: Export pretalx favourites
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pretalx-favourites-export
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    env:
+      PRETALX_STARRED_EXPORT_BASE_URL: ${{ vars.PRETALX_STARRED_EXPORT_BASE_URL }}
+      PRETALX_STARRED_EXPORT_EVENT_SLUG: ${{ vars.PRETALX_STARRED_EXPORT_EVENT_SLUG }}
+      PRETALX_STARRED_EXPORT_OUTPUT_PATH: ${{ vars.PRETALX_STARRED_EXPORT_OUTPUT_PATH }}
+      PRETALX_STARRED_EXPORT_COOKIE_NAME: ${{ vars.PRETALX_STARRED_EXPORT_COOKIE_NAME }}
+      PRETALX_STARRED_EXPORT_USERNAME: ${{ secrets.PRETALX_STARRED_EXPORT_USERNAME }}
+      PRETALX_STARRED_EXPORT_PASSWORD: ${{ secrets.PRETALX_STARRED_EXPORT_PASSWORD }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install exporter
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install .
+
+      - name: Validate configuration
+        run: |
+          set -eu
+          required=(
+            PRETALX_STARRED_EXPORT_BASE_URL
+            PRETALX_STARRED_EXPORT_EVENT_SLUG
+            PRETALX_STARRED_EXPORT_OUTPUT_PATH
+            PRETALX_STARRED_EXPORT_USERNAME
+            PRETALX_STARRED_EXPORT_PASSWORD
+          )
+
+          for var_name in "${required[@]}"; do
+            if [ -z "${!var_name:-}" ]; then
+              echo "::error::Missing required repository setting: ${var_name}"
+              exit 1
+            fi
+          done
+
+          echo "::add-mask::${PRETALX_STARRED_EXPORT_USERNAME}"
+          echo "::add-mask::${PRETALX_STARRED_EXPORT_PASSWORD}"
+
+      - name: Run exporter
+        run: |
+          set -eu
+          mkdir -p "$(dirname "${PRETALX_STARRED_EXPORT_OUTPUT_PATH}")"
+          python -m pretalx_star_exporter
+
+      - name: Prepare publish directory
+        run: |
+          set -eu
+          output_file="$(basename "${PRETALX_STARRED_EXPORT_OUTPUT_PATH}")"
+
+          mkdir -p public
+          cp "${PRETALX_STARRED_EXPORT_OUTPUT_PATH}" "public/${output_file}"
+
+          cat > public/index.html <<EOF
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>pretalx favourites export</title>
+            </head>
+            <body>
+              <h1>pretalx favourites export</h1>
+              <p><a href="${output_file}">${output_file}</a></p>
+            </body>
+          </html>
+          EOF
+
+          touch public/.nojekyll
+
+      - name: Publish ICS branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: calendar
+          publish_dir: ./public
+          force_orphan: true
+          commit_message: "chore(export): update pretalx favourites calendar"

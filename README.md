@@ -120,3 +120,32 @@ uv run pretalx-starred-export \
 ```bash
 uv run pytest
 ```
+
+## GitHub Actions automation
+
+This repository includes `.github/workflows/export-calendar.yml` to run the exporter on a schedule and publish the generated ICS to a dedicated `calendar` branch.
+
+### Required repository variables (Settings → Secrets and variables → Actions → Variables)
+
+- `PRETALX_STARRED_EXPORT_BASE_URL` (example: `https://pretalx.example.org`)
+- `PRETALX_STARRED_EXPORT_EVENT_SLUG` (example: `demo26`)
+- `PRETALX_STARRED_EXPORT_OUTPUT_PATH` (example: `out/favourites.ics`)
+- Optional: `PRETALX_STARRED_EXPORT_COOKIE_NAME` (defaults to `pretalx_session` if unset)
+
+### Required repository secrets (Settings → Secrets and variables → Actions → Secrets)
+
+- `PRETALX_STARRED_EXPORT_USERNAME`
+- `PRETALX_STARRED_EXPORT_PASSWORD`
+
+The workflow passes credentials via environment variables only (not CLI arguments), and masks both username and password in logs.
+
+### GitHub Pages
+
+The workflow publishes from the `calendar` branch. Configure GitHub Pages source to:
+
+- **Branch:** `calendar`
+- **Folder:** `/ (root)`
+
+After enabling Pages, your ICS will be available at:
+
+- `https://<owner>.github.io/<repo>/favourites.ics` (or whatever file name you set in `PRETALX_STARRED_EXPORT_OUTPUT_PATH`)
