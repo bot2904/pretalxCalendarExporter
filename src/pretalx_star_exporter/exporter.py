@@ -570,7 +570,13 @@ def build_calendar(
         master.add("dtstamp", now)
         master.add("dtstart", first_start)
         master.add("dtend", first_end)
-        _apply_slot_metadata(master, code, first_slot)
+        _apply_slot_metadata(
+            master,
+            code,
+            first_slot,
+            base_url=base_url,
+            event_slug=event_slug,
+        )
 
         if len(normalized_slots) > 1:
             for _slot, start, _end in normalized_slots[1:]:
@@ -585,7 +591,13 @@ def build_calendar(
             override.add("recurrence-id", start)
             override.add("dtstart", start)
             override.add("dtend", end)
-            _apply_slot_metadata(override, code, slot)
+            _apply_slot_metadata(
+                override,
+                code,
+                slot,
+                base_url=base_url,
+                event_slug=event_slug,
+            )
             calendar.add_component(override)
 
     return calendar
@@ -610,7 +622,14 @@ def _normalized_slots(
     return normalized
 
 
-def _apply_slot_metadata(event: Event, code: str, slot: dict[str, Any]) -> None:
+def _apply_slot_metadata(
+    event: Event,
+    code: str,
+    slot: dict[str, Any],
+    *,
+    base_url: str,
+    event_slug: str,
+) -> None:
     submission = slot.get("submission") if isinstance(slot.get("submission"), dict) else {}
 
     title = _text_value(submission.get("title")) or f"Submission {code}"
@@ -630,7 +649,12 @@ def _apply_slot_metadata(event: Event, code: str, slot: dict[str, Any]) -> None:
     if talk_description and talk_description != abstract:
         description_parts.append(talk_description)
 
-    public_url = _public_submission_url(submission)
+    public_url = _public_submission_url(
+        submission,
+        base_url=base_url,
+        event_slug=event_slug,
+        submission_code=code,
+    )
     if public_url:
         description_parts.append(f"Link: {public_url}")
 
@@ -709,7 +733,13 @@ def _room_name(room: Any) -> str:
     return ""
 
 
-def _public_submission_url(submission: dict[str, Any]) -> str:
+def _public_submission_url(
+    submission: dict[str, Any],
+    *,
+    base_url: str,
+    event_slug: str,
+    submission_code: str,
+) -> str:
     url = submission.get("url")
     if isinstance(url, str) and url.strip():
         return url.strip()
@@ -719,6 +749,14 @@ def _public_submission_url(submission: dict[str, Any]) -> str:
         public_url = urls.get("public") or urls.get("detail")
         if isinstance(public_url, str):
             return public_url.strip()
+
+    normalized_slug = event_slug.strip("/")
+    code = _text_value(submission.get("code")) or submission_code.strip()
+    if normalized_slug and code and base_url.strip():
+        return urljoin(
+            f"{base_url.rstrip('/')}/",
+            f"{normalized_slug}/talk/{code}/",
+        )
 
     return ""
 

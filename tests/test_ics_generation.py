@@ -98,3 +98,39 @@ def test_build_calendar_uses_speaker_names_and_includes_description() -> None:
     assert "A longer talk description." in description
     assert "Link: https://pretalx.example.org/demo26/talk/def456/" in description
     assert str(vevents[0].get("URL")) == "https://pretalx.example.org/demo26/talk/def456/"
+
+
+def test_build_calendar_falls_back_to_canonical_talk_url() -> None:
+    slots_by_code = {
+        "GHI789": [
+            {
+                "start": "2026-04-22T14:00:00+00:00",
+                "end": "2026-04-22T15:00:00+00:00",
+                "room": {"name": "Main Hall"},
+                "submission": {
+                    "title": "No URL in API payload",
+                    "description": "The API did not provide a direct URL field.",
+                    "state": "confirmed",
+                    "is_public": True,
+                    "speakers": [{"name": "Grace Hopper"}],
+                },
+            }
+        ]
+    }
+
+    calendar = build_calendar(
+        base_url="https://pretalx.example.org",
+        event_slug="demo26",
+        timezone_name="Europe/Vienna",
+        slots_by_code=slots_by_code,
+    )
+
+    parsed = Calendar.from_ical(calendar.to_ical())
+    vevents = [component for component in parsed.walk() if component.name == "VEVENT"]
+    assert len(vevents) == 1
+
+    expected_url = "https://pretalx.example.org/demo26/talk/GHI789/"
+    description = str(vevents[0].get("DESCRIPTION"))
+
+    assert f"Link: {expected_url}" in description
+    assert str(vevents[0].get("URL")) == expected_url
