@@ -35,3 +35,8 @@ Most relevant files:
 - Access requires `schedule.list_schedule` permission on the event.
 - For logged-in attendees, session cookies are the practical auth path (`pretalx_session`; CSRF token for POST/DELETE).
 - Anonymous stars are stored client-side in localStorage key `${eventSlug}_favs`.
+
+## GitHub CLI (very brief)
+- Check login: `gh auth status`
+- Create and push repo from current dir: `gh repo create <owner>/<repo> --source=. --remote=origin --push`
+- Rename/change visibility: `gh repo rename <new-name>` and `gh repo edit <owner>/<repo> --visibility public --accept-visibility-change-consequences`
