@@ -1,0 +1,17 @@
+# Template configuration for pretalx-starred-export
+# Copy to /workspace/.config.yml and fill in your values.
+
+# Required
+base_url: https://pretalx.example.org
+event_slug: demo26
+output_path: /workspace/favourites.ics
+
+# Preferred authentication (used first if both are set)
+username: attendee@example.org
+password: change-me
+
+# Optional Firefox cookie fallback
+# firefox_profile: /home/your-user/.mozilla/firefox/abcd1234.default-release
+
+# Optional: override session cookie name (defaults to pretalx_session)
+# cookie_name: pretalx_session
