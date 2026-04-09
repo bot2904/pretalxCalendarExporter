@@ -5,7 +5,7 @@ Exports a logged-in pretalx user's starred/favourited sessions to an `.ics` file
 ## What it does
 
 - Authenticates as a pretalx user (session auth)
-  - Preferred: username/password login (`/orga/login/`, CSRF-aware)
+  - Preferred: username/password login (CSRF-aware). Tries `/{event}/login/?next=...` first, then `/{event}/login/`, then `/orga/login/`.
   - Fallback: Firefox `cookies.sqlite` (`pretalx_session` cookie)
 - Loads favourites from:
   - `GET /api/events/{event}/submissions/favourites/`
@@ -22,6 +22,33 @@ Exports a logged-in pretalx user's starred/favourited sessions to an `.ics` file
 ```bash
 uv sync
 uv run pretalx-starred-export --help
+```
+
+## Docker (lightweight)
+
+Build the image:
+
+```bash
+docker build -t pretalx-starred-exporter .
+```
+
+Run it with your local config/output directory mounted at `/workspace`:
+
+```bash
+docker run --rm -v "$PWD:/workspace" pretalx-starred-exporter
+```
+
+This uses the default config path (`/workspace/.config.yml`) from inside the container.
+
+You can also override config values directly via CLI flags:
+
+```bash
+docker run --rm -v "$PWD:/workspace" pretalx-starred-exporter \
+  --base-url https://pretalx.example.org \
+  --event-slug demo26 \
+  --output-path /workspace/favourites.ics \
+  --username attendee@example.org \
+  --password super-secret
 ```
 
 ## Configuration

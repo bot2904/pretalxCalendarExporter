@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import configparser
+import html.parser
 import re
 import sqlite3
 import tempfile
@@ -8,7 +9,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlencode, urljoin, urlparse
 
 import requests
 import yaml
@@ -153,6 +154,7 @@ def authenticate_session(
             login_with_credentials(
                 session=session,
                 base_url=config.base_url,
+                event_slug=config.event_slug,
                 username=config.username,
                 password=config.password,
                 cookie_name=config.cookie_name,
@@ -179,21 +181,66 @@ def authenticate_session(
 def login_with_credentials(
     session: requests.Session,
     base_url: str,
+    event_slug: str,
     username: str,
     password: str,
     cookie_name: str,
 ) -> None:
-    login_url = urljoin(f"{base_url}/", "orga/login/")
+    errors: list[str] = []
+
+    for login_url in _login_url_candidates(base_url, event_slug):
+        try:
+            _login_with_credentials_at_url(
+                session=session,
+                login_url=login_url,
+                username=username,
+                password=password,
+                cookie_name=cookie_name,
+            )
+            return
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{login_url}: {exc}")
+
+    details = "; ".join(errors)
+    raise AuthenticationError(f"Credential login failed: {details}")
+
+
+def _login_url_candidates(base_url: str, event_slug: str) -> list[str]:
+    candidates: list[str] = []
+    normalized_slug = event_slug.strip("/")
+
+    if normalized_slug:
+        event_login_url = urljoin(f"{base_url}/", f"{normalized_slug}/login/")
+        next_target = f"/{normalized_slug}/schedule/"
+        candidates.append(f"{event_login_url}?{urlencode({'next': next_target})}")
+        candidates.append(event_login_url)
+
+    candidates.append(urljoin(f"{base_url}/", "orga/login/"))
+
+    # Keep insertion order but avoid duplicate URLs.
+    return list(dict.fromkeys(candidates))
+
+
+def _login_with_credentials_at_url(
+    session: requests.Session,
+    login_url: str,
+    username: str,
+    password: str,
+    cookie_name: str,
+) -> None:
     response = session.get(login_url, timeout=30)
     response.raise_for_status()
 
-    csrf_token = session.cookies.get("csrftoken") or extract_csrf_token(response.text)
+    csrf_token = _find_csrf_cookie(session.cookies) or extract_csrf_token(response.text)
     if not csrf_token:
         raise AuthenticationError("Could not extract CSRF token from login page")
 
     response = session.post(
         login_url,
         data={
+            # Different pretalx versions/form variants use different field names.
+            "login_email": username,
+            "login_password": password,
             "login": username,
             "password": password,
             "csrfmiddlewaretoken": csrf_token,
@@ -208,9 +255,59 @@ def login_with_credentials(
         raise AuthenticationError("Login did not create a pretalx session cookie")
 
 
+def _find_csrf_cookie(cookie_jar: requests.cookies.RequestsCookieJar) -> str | None:
+    for cookie_name in ("pretalx_csrftoken", "csrftoken"):
+        token = cookie_jar.get(cookie_name)
+        if token:
+            return str(token)
+
+    for cookie in cookie_jar:
+        if cookie.name.lower().endswith("csrftoken") and cookie.value:
+            return str(cookie.value)
+
+    return None
+
+
 def extract_csrf_token(html: str) -> str | None:
-    match = re.search(r'name=["\']csrfmiddlewaretoken["\']\s+value=["\']([^"\']+)', html)
+    parser = _InputValueParser(input_name="csrfmiddlewaretoken")
+    parser.feed(html)
+    parser.close()
+
+    if parser.found_value:
+        return parser.found_value
+
+    # Fallback regex for malformed/minified markup.
+    match = re.search(
+        r"\bname=(?:[\"'])?csrfmiddlewaretoken(?:[\"'])?[^>]*\bvalue=(?:[\"'])?([^\"'\s>]+)",
+        html,
+    )
+    if match:
+        return match.group(1)
+
+    match = re.search(
+        r"\bvalue=(?:[\"'])?([^\"'\s>]+)(?:[\"'])?[^>]*\bname=(?:[\"'])?csrfmiddlewaretoken(?:[\"'])?",
+        html,
+    )
     return match.group(1) if match else None
+
+
+class _InputValueParser(html.parser.HTMLParser):
+    def __init__(self, input_name: str):
+        super().__init__()
+        self._input_name = input_name
+        self.found_value: str | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if self.found_value or tag.lower() != "input":
+            return
+
+        attr_map = {name: value for name, value in attrs if name}
+        if attr_map.get("name") != self._input_name:
+            return
+
+        value = attr_map.get("value")
+        if value:
+            self.found_value = value
 
 
 def auto_detect_firefox_profile() -> Path:
