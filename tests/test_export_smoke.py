@@ -49,7 +49,10 @@ def test_export_smoke_flow(tmp_path: Path, monkeypatch) -> None:
         lambda session, config, warnings: "credentials",
     )
     monkeypatch.setattr(exporter, "fetch_event_timezone", lambda session, config: "Europe/Vienna")
+    monkeypatch.setattr(exporter, "fetch_current_schedule_id", lambda session, config: 42)
     monkeypatch.setattr(exporter, "fetch_favourites", lambda session, config: ["A1", "B2"])
+
+    captured_schedule_ids: list[int | None] = []
 
     slots = {
         "A1": [
@@ -82,7 +85,10 @@ def test_export_smoke_flow(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(
         exporter,
         "fetch_slots_for_submission",
-        lambda session, config, submission_code: slots[submission_code],
+        lambda session, config, submission_code, schedule_id=None: (
+            captured_schedule_ids.append(schedule_id),
+            slots[submission_code],
+        )[1],
     )
 
     report = exporter.export_starred_sessions(config, session=requests.Session())
@@ -92,6 +98,7 @@ def test_export_smoke_flow(tmp_path: Path, monkeypatch) -> None:
     assert report.exported_submissions == 2
     assert report.exported_slots == 3
     assert report.warnings == []
+    assert captured_schedule_ids == [42, 42]
 
     payload = output_path.read_bytes()
     parsed = Calendar.from_ical(payload)

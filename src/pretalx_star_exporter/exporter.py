@@ -115,12 +115,26 @@ def export_starred_sessions(
     except Exception as exc:  # noqa: BLE001
         warnings.append(f"Could not fetch event timezone, falling back to UTC: {exc}")
 
+    current_schedule_id: int | None = None
+    try:
+        current_schedule_id = fetch_current_schedule_id(client, config)
+    except Exception as exc:  # noqa: BLE001
+        warnings.append(
+            "Could not fetch current schedule version; "
+            f"slot results may include historical revisions: {exc}"
+        )
+
     favourites = fetch_favourites(client, config)
     slots_by_code: dict[str, list[dict[str, Any]]] = {}
 
     for code in favourites:
         try:
-            slots = fetch_slots_for_submission(client, config, code)
+            slots = fetch_slots_for_submission(
+                client,
+                config,
+                code,
+                schedule_id=current_schedule_id,
+            )
             if slots:
                 slots_by_code[code] = slots
         except Exception as exc:  # noqa: BLE001
@@ -415,6 +429,29 @@ def fetch_event_timezone(session: requests.Session, config: ExportConfig) -> str
     return "UTC"
 
 
+def fetch_current_schedule_id(
+    session: requests.Session,
+    config: ExportConfig,
+) -> int | None:
+    endpoint = urljoin(
+        f"{config.base_url}/",
+        f"api/events/{config.event_slug}/schedules/",
+    )
+
+    schedule_ids: list[int] = []
+    for item in iter_paginated(session, endpoint):
+        if not isinstance(item, dict):
+            continue
+        schedule_id = item.get("id")
+        if isinstance(schedule_id, int):
+            schedule_ids.append(schedule_id)
+
+    if not schedule_ids:
+        return None
+
+    return max(schedule_ids)
+
+
 def fetch_favourites(session: requests.Session, config: ExportConfig) -> list[str]:
     endpoint = urljoin(
         f"{config.base_url}/",
@@ -446,12 +483,15 @@ def fetch_slots_for_submission(
     session: requests.Session,
     config: ExportConfig,
     submission_code: str,
+    schedule_id: int | None = None,
 ) -> list[dict[str, Any]]:
     endpoint = urljoin(f"{config.base_url}/", f"api/events/{config.event_slug}/slots/")
     params = {
         "submission": submission_code,
         "expand": "submission,room",
     }
+    if schedule_id is not None:
+        params["schedule"] = schedule_id
 
     slots: list[dict[str, Any]] = []
     for item in iter_paginated(session, endpoint, params=params):
