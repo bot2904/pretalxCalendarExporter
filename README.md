@@ -1,52 +1,39 @@
 # pretalx starred sessions → ICS exporter
 
-Exports a logged-in pretalx user's starred/favourited sessions to an `.ics` file via the pretalx API.
+Export a logged-in pretalx user’s starred/favourited sessions to an `.ics` file.
 
-## What it does
+## What it exports
 
-- Authenticates as a pretalx user (session auth)
-  - Preferred: username/password login (CSRF-aware). Tries `/{event}/login/?next=...` first, then `/{event}/login/`, then `/orga/login/`.
-  - Fallback: Firefox `cookies.sqlite` (`pretalx_session` cookie)
-- Loads favourites from:
-  - `GET /api/events/{event}/submissions/favourites/`
-- Loads slot details per favourite from:
-  - `GET /api/events/{event}/slots/?submission=<code>&expand=submission,room&schedule=<current_schedule_id>`
-- Generates an ICS calendar in the event timezone.
-- Includes title, room, speaker(s), description, and date/time.
-- Represents multi-slot submissions as a calendar series.
-- Prefixes cancelled/hidden sessions with `CANCELLED:`.
-- Writes safely through a temporary file and validates generated ICS before replacing the target file.
+For each favourited submission, the exporter fetches slots from the **current schedule version** and writes ICS events with:
 
-## Install / run (uv)
+- title (`SUMMARY`)
+- room (`LOCATION`)
+- speaker **names** (not speaker IDs)
+- abstract + talk description (`DESCRIPTION`)
+- public talk link (`URL`, also included in `DESCRIPTION`)
+- timezone-aware start/end in the event timezone
+
+It also:
+
+- marks cancelled/hidden sessions as `CANCELLED:` + `STATUS:CANCELLED`
+- represents multi-slot talks as a recurring series
+- validates ICS before replacing the output file (atomic temp-file write)
+
+## Authentication
+
+Session authentication is used (as required by the favourites API):
+
+1. Username/password login (preferred)
+   - tries `/{event}/login/?next=...`
+   - then `/{event}/login/`
+   - then `/orga/login/`
+2. Firefox cookie fallback (`cookies.sqlite`, `pretalx_session` by default)
+
+## Quick start (uv)
 
 ```bash
 uv sync
-uv run pretalx-starred-export --help
-```
-
-## Docker (lightweight)
-
-Build the image (using your host UID/GID so generated files stay owned by your user):
-
-```bash
-docker build \
-  --build-arg UID="$(id -u)" \
-  --build-arg GID="$(id -g)" \
-  -t pretalx-starred-exporter .
-```
-
-Run it with your local config/output directory mounted at `/workspace`:
-
-```bash
-docker run --rm -v "$PWD:/workspace" pretalx-starred-exporter
-```
-
-This uses the default config path (`/workspace/.config.yml`) from inside the container.
-
-You can also override config values directly via CLI flags:
-
-```bash
-docker run --rm -v "$PWD:/workspace" pretalx-starred-exporter \
+uv run pretalx-starred-export \
   --base-url https://pretalx.example.org \
   --event-slug demo26 \
   --output-path /workspace/favourites.ics \
@@ -54,23 +41,9 @@ docker run --rm -v "$PWD:/workspace" pretalx-starred-exporter \
   --password super-secret
 ```
 
-Or pass configuration via environment variables (useful for CI/secrets):
-
-```bash
-docker run --rm -v "$PWD:/workspace" \
-  -e PRETALX_STARRED_EXPORT_BASE_URL=https://pretalx.example.org \
-  -e PRETALX_STARRED_EXPORT_EVENT_SLUG=demo26 \
-  -e PRETALX_STARRED_EXPORT_OUTPUT_PATH=/workspace/favourites.ics \
-  -e PRETALX_STARRED_EXPORT_USERNAME=attendee@example.org \
-  -e PRETALX_STARRED_EXPORT_PASSWORD=super-secret \
-  pretalx-starred-exporter
-```
-
 ## Configuration
 
 Default config path: `/workspace/.config.yml`
-
-Example:
 
 ```yaml
 base_url: https://pretalx.example.org
@@ -81,12 +54,12 @@ output_path: /workspace/favourites.ics
 username: attendee@example.org
 password: super-secret
 
-# optional fallback override
+# optional Firefox fallback override
 # firefox_profile: /home/user/.mozilla/firefox/abcd1234.default-release
 # cookie_name: pretalx_session
 ```
 
-Equivalent environment variables:
+Environment variable equivalents:
 
 - `PRETALX_STARRED_EXPORT_BASE_URL`
 - `PRETALX_STARRED_EXPORT_EVENT_SLUG`
@@ -96,23 +69,23 @@ Equivalent environment variables:
 - `PRETALX_STARRED_EXPORT_FIREFOX_PROFILE`
 - `PRETALX_STARRED_EXPORT_COOKIE_NAME`
 
-Configuration precedence is:
+Precedence: **CLI > environment > YAML config**.
 
-1. CLI flags
-2. Environment variables
-3. YAML config file
+## Docker
 
-## CLI usage
-
-CLI flags override environment variables and config file values:
+Build:
 
 ```bash
-uv run pretalx-starred-export \
-  --base-url https://pretalx.example.org \
-  --event-slug demo26 \
-  --output-path /workspace/favourites.ics \
-  --username attendee@example.org \
-  --password super-secret
+docker build \
+  --build-arg UID="$(id -u)" \
+  --build-arg GID="$(id -g)" \
+  -t pretalx-starred-exporter .
+```
+
+Run (mount current directory to `/workspace`):
+
+```bash
+docker run --rm -v "$PWD:/workspace" pretalx-starred-exporter
 ```
 
 ## Tests
@@ -121,31 +94,18 @@ uv run pretalx-starred-export \
 uv run pytest
 ```
 
-## GitHub Actions automation
+## GitHub Actions (optional)
 
-This repository includes `.github/workflows/export-calendar.yml` to run the exporter on a schedule and publish the generated ICS to a dedicated `calendar` branch.
+The repository includes `.github/workflows/export-calendar.yml` to generate and publish the ICS on a schedule.
 
-### Required repository variables (Settings → Secrets and variables → Actions → Variables)
+Required repo variables:
 
-- `PRETALX_STARRED_EXPORT_BASE_URL` (example: `https://pretalx.example.org`)
-- `PRETALX_STARRED_EXPORT_EVENT_SLUG` (example: `demo26`)
-- `PRETALX_STARRED_EXPORT_OUTPUT_PATH` (example: `out/favourites.ics`)
-- Optional: `PRETALX_STARRED_EXPORT_COOKIE_NAME` (defaults to `pretalx_session` if unset)
+- `PRETALX_STARRED_EXPORT_BASE_URL`
+- `PRETALX_STARRED_EXPORT_EVENT_SLUG`
+- `PRETALX_STARRED_EXPORT_OUTPUT_PATH`
+- optional: `PRETALX_STARRED_EXPORT_COOKIE_NAME`
 
-### Required repository secrets (Settings → Secrets and variables → Actions → Secrets)
+Required repo secrets:
 
 - `PRETALX_STARRED_EXPORT_USERNAME`
 - `PRETALX_STARRED_EXPORT_PASSWORD`
-
-The workflow passes credentials via environment variables only (not CLI arguments), and masks both username and password in logs.
-
-### GitHub Pages
-
-The workflow publishes from the `calendar` branch. Configure GitHub Pages source to:
-
-- **Branch:** `calendar`
-- **Folder:** `/ (root)`
-
-After enabling Pages, your ICS will be available at:
-
-- `https://<owner>.github.io/<repo>/favourites.ics` (or whatever file name you set in `PRETALX_STARRED_EXPORT_OUTPUT_PATH`)
