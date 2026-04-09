@@ -26,10 +26,13 @@ uv run pretalx-starred-export --help
 
 ## Docker (lightweight)
 
-Build the image:
+Build the image (using your host UID/GID so generated files stay owned by your user):
 
 ```bash
-docker build -t pretalx-starred-exporter .
+docker build \
+  --build-arg UID="$(id -u)" \
+  --build-arg GID="$(id -g)" \
+  -t pretalx-starred-exporter .
 ```
 
 Run it with your local config/output directory mounted at `/workspace`:
