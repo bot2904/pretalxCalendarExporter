@@ -1,0 +1,355 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pretalx-starred-exporter//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:pretalx favourites (glt26)
+X-WR-TIMEZONE:Europe/Vienna
+BEGIN:VEVENT
+SUMMARY:How we hacked the Bavarian State with an Open Source Open Letter
+DTSTART;TZID=Europe/Vienna:20260411T130000
+DTEND;TZID=Europe/Vienna:20260411T132500
+DTSTAMP:20260413T155744Z
+UID:7AC7RK@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Markus Feilner\n\nIn September\, a few of us Open So
+ urce nerds heard that the Bavarian government wanted to "sneakily" "invest
+ " another billion Euro in Microsoft Cloud\, Teams and 365 – without a te
+ nder\, and before the year ends (Base contract)\nI talked to friends\, and
+  we created an open letter. Soon we were like ten initiators.\nWe found su
+ pport among many Bavarian Open Source companies and NGOs\, only weeks late
+ r > 160 companies and institutions had been signing the letter. \n\nWhen l
+ arger German NGOs like the Gesellschaft für Informatik (Society for Infor
+ matics) and the Bund der Steuerzahler (Tax Payers' Association joined\, th
+ e Bavarian Government could not stay silent any more. Leading up of today\
+ , two secretaries and the minister president have engaged in a public blam
+ e game. At first they were angry about the unwanted\, additional publicity
+  - and publicly said so. \n\nThe goal of sneakily accomplishing the deal u
+ ntil end of 2025 failed and it is still not finalized. But now - four week
+ s before an election\, secretaries of state for digital and finance are fi
+ ghting publicly\, accusing each other of "fake news" and are saying silly 
+ things. \nOn camera - and in parliament.  \n\n"OSS is too expensive" or "W
+ e needed something federated\, decentralized and secure\, thus we had to g
+ o for MS 365" and similar. It's fun. \n\nWhat we can learn from this? PR f
+ or OSS works\, timing is helpful\, topics are important and claims like "O
+ NE BILLION!!" are valuable. No one knew Trump\, Greenland and Davos would 
+ come to help us\, but they did and made it hard for the conservative Bavar
+ ian government to keep doing what they had always been. And we were a bunc
+ h of people that stuck it out.\nAnd it's so important that we the OSS comm
+ unity learn how to play against the lobbys. We need to apply the "divide a
+ nd conquer" strategy against the real enemies\, not internally.\n\nLink: h
+ ttps://pretalx.linuxtage.at/glt26/talk/7AC7RK/
+LOCATION:HS i2
+URL:https://pretalx.linuxtage.at/glt26/talk/7AC7RK/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Privacy at the Code Level
+DTSTART;TZID=Europe/Vienna:20260411T180000
+DTEND;TZID=Europe/Vienna:20260411T184500
+DTSTAMP:20260413T155744Z
+UID:9JUXWQ@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Cat Easdon\n\n**So you're familiar with secure codin
+ g practices\, and you've taken steps to secure your devices and protect yo
+ ur personal privacy. But what about the privacy leaks in your code?**\n___
+ \nIn this talk\, we'll take a whirlwind tour of privacy issues at the code
+  level: where they happen\, how to prevent them\, and how to privacy threa
+ t model to understand which privacy protections your users need from you. 
+ You'll learn how to protect privacy in your APIs and web applications\, al
+ ong with how to keep your systems both private *and* observable when using
+  observability frameworks such as OpenTelemetry.\n\nLink: https://pretalx.
+ linuxtage.at/glt26/talk/9JUXWQ/
+LOCATION:HS i1
+URL:https://pretalx.linuxtage.at/glt26/talk/9JUXWQ/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Transitous - Free and Open Public transport routing
+DTSTART;TZID=Europe/Vienna:20260411T151500
+DTEND;TZID=Europe/Vienna:20260411T154000
+DTSTAMP:20260413T155744Z
+UID:AJZHEG@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Volker Krause\n\nFOSS applications around public tra
+ nsport for the longest time were stuck with using proprietary and reverse 
+ engineered APIs from transport operators that could disappear at any point
+  without notice\, and which had arbitrary product limitations or regional 
+ boundaries. Transitous is a community-run public transport routing service
+  built with Free Software and Open Data to provide an alternative to this.
+  Started in 2024 it meanwhile covers more 300\,000 concurrent trips on an 
+ average workday in over 60 countries.\n\nIn this talk we'll look at where 
+ Transitous came from\, how it's built and what features it offers for use 
+ in FOSS applications. We will also cover what data it consumes and how you
+  can contribute by adding new datasets\, improving and extending exiting o
+ nes\, and which aspects of OpenStreetMap (OSM) mapping are particularly re
+ levant for routing.\n\nLink: https://pretalx.linuxtage.at/glt26/talk/AJZHE
+ G/
+LOCATION:HS i7
+URL:https://pretalx.linuxtage.at/glt26/talk/AJZHEG/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Tatort 🤡-IT
+DTSTART;TZID=Europe/Vienna:20260411T110000
+DTEND;TZID=Europe/Vienna:20260411T114500
+DTSTAMP:20260413T155744Z
+UID:ARZU9Q@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Michael Prokop\n\nIm täglichen Geschäft kümmert s
+ ich der Vortragende unter anderem darum\, dass die IT-Infrastruktur von di
+ versen Kunden wie gewünscht und möglichst stressfrei funktioniert. \n\nI
+ mmer wieder gibt es dabei aber auch spannende Debugging- und Feuerwehr-Ein
+ sätze. Im Vortrag schauen wir einige dieser "sysadmin stories of things g
+ one wrong" an. Es geht dabei u.a. um Firewalls\, Backup-Software und Passw
+ örter. Wir analysieren anhand dieser Geschichten\, was konkret schief lie
+ f und welche Lektionen sich daraus lernen lassen. Und welche Fehler gilt e
+ s beim Betrieb von IT-Infrastruktur generell zu vermeiden\, um nicht mit 
+ 🤡-IT zu enden?\n\nDer Vortrag erfordert *keine* speziellen Vorkenntniss
+ e\, aufgrund der Fragestellungen sollte für jedes Skill-Level was passend
+ es dabei sein. Inhaltlich richtet sich der  Vortrag an alle Interessierten
+  rund um den zuverlässigen\, langfristigen und stabilen Betrieb von IT-In
+ frastruktur.\n\nLink: https://pretalx.linuxtage.at/glt26/talk/ARZU9Q/
+LOCATION:HS i7
+URL:https://pretalx.linuxtage.at/glt26/talk/ARZU9Q/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Einführung in GNU Emacs Org-mode
+DTSTART;TZID=Europe/Vienna:20260410T140000
+DTEND;TZID=Europe/Vienna:20260410T165000
+DTSTAMP:20260413T155744Z
+UID:BAGVK7@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Karl Voit\n\nDies ist die Fortsetzung zum Einführun
+ gsworkshop in GNU Emacs und da der Übergang fließend sein wird\, empfieh
+ lt sich der Besuch von beiden Workshops.\n\nNach den ersten Schritten auf 
+ der GNU Emacs Plattform ist der nächste logische Schritt das Kennenlernen
+  von dem extrem flexibel einsetzbaren Org-mode für Selbstorganisation und
+  Wissensmanagement aller Art.\n\nKarl wird mit den Teilnehmer:innen die Gr
+ undlagen der leichtgewichtigen Auszeichnungssprache Orgdown beginnen und d
+ anach auf die Basisfunktionalität von Org-mode eingehen.\n\nShownotes wer
+ den nach dem Event unter https://Karl-Voit.at/2026/04/10/GLT26-Emacs-Works
+ hops veröffentlicht.\n\nAufgrund der extrem vielfältigen Anwendungsmögl
+ ichkeiten biegen wir dann gemeinsam in Teilbereiche ab\, die die Teilnehme
+ r:innen speziell interessieren.\n\n- Todomanagement\n- Projektmanagement\n
+ - Task-Abhängigkeiten\n- Eigene Linktypen definieren\n- Wissensmanagement
+ \n- Export in anderen Dateiformate\n- Präsentationen\n- Programmcodeeinbi
+ ndung\n- Kontaktverwaltung\n- (Hardware-)Inventar\n- Tabellenkalkulation\n
+ - Dateimanagement\n- Einbindung von E-Mails\n- Web-Bookmarksammlung\n- Ref
+ erenzverwaltung\n- Blogging\n- Anpassungen\n- ...\n\nDie Teilnehmer:innen 
+ sind aufgefordert\, einen bereits installierten GNU Emacs auf ihren Notebo
+ oks mitzubringen\, sofern sie mitmachen wollen.\n\nKarl hat schon in den 9
+ 0ern mit Emacs erste Erfahrungen gesammelt und ist ein international bekan
+ nter Blogger und Vortragender zu dem Themenkreis GNU Emacs\, Org-mode und 
+ Personal Information Management im Allgemeinen:\n\nSeine Emacs-Artikel: ht
+ tps://karl-voit.at/tags/emacs/\nEmacs ist so viel mehr als nur ein Textedi
+ tor: https://karl-voit.at/2015/10/23/Emacs-is-not-just-an-editor/\nDer Ein
+ stieg in GNU Emacs und Org-mode: https://karl-voit.at/2023/05/16/Emacs-Org
+ -deutsch/\nHow to Start With Emacs Org Mode: https://karl-voit.at/2020/01/
+ 20/start-using-orgmode/\nOrgdown: https://karl-voit.at/2021/11/27/orgdown/
+ \nWomöglich werden auch Teile von https://github.com/novoid/org-mode-work
+ shop/ aktualisiert und eingebunden\n\nSeit über einem viertel Jahrhundert
+  nutzt Karl täglich den vim als auch den Emacs für seine Zwecke.\n\nLink
+ : https://pretalx.linuxtage.at/glt26/talk/BAGVK7/
+LOCATION:HS i11
+URL:https://pretalx.linuxtage.at/glt26/talk/BAGVK7/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Energiewende? Wie? Jetzt!?
+DTSTART;TZID=Europe/Vienna:20260411T160000
+DTEND;TZID=Europe/Vienna:20260411T164500
+DTSTAMP:20260413T155744Z
+UID:DCPFRV@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Michael\n\nEnergiewende ist ein Prozess. Ein Weg.\nU
+ nd den meinigen möchte ich präsentieren (plus einige schmankerl wie alle
+ rgisch Homeassistant auf umbauten reagiert) \;)\n\nMeine Datensammlung umf
+ asst nun mehrere Jahre meiner Transformation zuhause\, die zeigt was alles
+  möglich ist!\n\nPlus natürlich die Erfahrungen auf dem Weg\, nicht jede
+  Entscheidung führt zum gewünschten Erfolg..\n\nIm Schnitt bin ich damit
+  gut gefahren und hab versucht so viel als möglich an Daten mit Homeassis
+ tant zu sammeln.\n\nSollten jetzt alle losrennen und mitmachen an der Ener
+ gierevolution?\nAlso aus meiner Sicht schon\, aber gerne erstmal abchecken
+  was geht und was nicht so Vorteilhaft wäre \;)\n\nLink: https://pretalx.
+ linuxtage.at/glt26/talk/DCPFRV/
+LOCATION:HS i1
+URL:https://pretalx.linuxtage.at/glt26/talk/DCPFRV/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:What can we learn from Android for other embedded Linux systems se
+ curity?
+DTSTART;TZID=Europe/Vienna:20260411T090000
+DTEND;TZID=Europe/Vienna:20260411T094500
+DTSTAMP:20260413T155744Z
+UID:J8GCHE@pretalx.linuxtage.at
+DESCRIPTION:Speakers: René Mayrhofer\n\nAndroid has become the primary op
+ erating system for a significant part of the global population\, and it us
+ es Linux at its core. While the user space stack on top of the kernel is v
+ astly different from the usual desktop distributions\, lessons learnt in A
+ ndroid platform development are valuable to other (embedded) Linux systems
+ . In particular\, Android has pioneered the scaled deployment of a number 
+ of security measures\, from application level sandboxing and permissions t
+ o fine-grained SELinux policies and dm-verity for system partition integri
+ ty. However\, the most difficult challenge seems protecting against inside
+ r attacks\, potentially with access to private signing keys. These mitigat
+ ions can be used for other embedded Linux systems as well\, and this talk 
+ should be seen as a call to action to try and adopt some of them more broa
+ dly in the embedded Linux ecosystem.\n\nLink: https://pretalx.linuxtage.at
+ /glt26/talk/J8GCHE/
+LOCATION:HS i7
+URL:https://pretalx.linuxtage.at/glt26/talk/J8GCHE/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:CTF 101: Introduction to Capture the Flag Challenges
+DTSTART;TZID=Europe/Vienna:20260410T130000
+DTEND;TZID=Europe/Vienna:20260410T165000
+DTSTAMP:20260413T155744Z
+UID:LD9RAS@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Kevin Saiger\, leo\, sebastian-felix\, ansa\, Marcel
+ l Haritopoulus\, Markus Pfeifenberger\n\nIn diesem Workshop zeigen Mitglie
+ der des CTF Teams LosFuzzys einen kleinen Einblick in das Lösen von CTF C
+ hallenges.\nWir erklären was CTF Challenges sind\, welche Arten von Chall
+ enges es gibt und warum CTFs eine großartige Art sind\, um in der Welt de
+ r Information Security Fuß zu fassen.\n\nIm Anschluss haben die Teilnehme
+ r die Möglichkeit selbst CTF Challenges zu lösen (dafür sollten eigene 
+ Laptops mitgenommen werden)\, dabei stehen ihnen Mitglieder von LosFuzzys 
+ helfend zur Seite.\n\n**Dieses Jahr werden wir zusätzlich auch on-stage C
+ hallenges lösen. Dabei bekommen Teilnehmer zuerst eine gewisse Zeit eine 
+ Challenge zu lösen und danach werden wir unseren Lösungsweg on-stage zei
+ gen.**\n\nWir haben Challenges vorbereitet unter: https://glt.fuzzy.land/\
+ n\nLink: https://pretalx.linuxtage.at/glt26/talk/LD9RAS/
+LOCATION:HS i12
+URL:https://pretalx.linuxtage.at/glt26/talk/LD9RAS/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:2025's Top Cyber Threats: A Closer Look
+DTSTART;TZID=Europe/Vienna:20260411T170000
+DTEND;TZID=Europe/Vienna:20260411T174500
+DTSTAMP:20260413T155744Z
+UID:R8NMLY@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Kevin Saiger\, leo\, sebastian-felix\, ansa\, Marcel
+ l Haritopoulus\n\nGet ready for an inside look at the top cyber threats of
+  2025. Our CTF-Team\, LosFuzzys\, will share our real-life experiences and
+  insights on the vulnerabilities we've encountered last year.\nFrom the be
+ hind-the-scenes stories to the practical lessons we've learned\, this talk
+  is packed with valuable information for anyone interested in cybersecurit
+ y.\nJoin us for an engaging and informative session that will give you a b
+ etter understanding of the current state of security and the types of atta
+ cks that are out there. Whether you're a student\, a professional\, or jus
+ t someone who wants to be more cyber-aware\, this talk is for you!\n\nLink
+ : https://pretalx.linuxtage.at/glt26/talk/R8NMLY/
+LOCATION:HS i7
+URL:https://pretalx.linuxtage.at/glt26/talk/R8NMLY/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:C-ITS: Mit einem ESP32 Ampeln\, Straßenbahnen und Autos tracken
+DTSTART;TZID=Europe/Vienna:20260411T100000
+DTEND;TZID=Europe/Vienna:20260411T104500
+DTSTAMP:20260413T155744Z
+UID:SRQ3M9@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Peter Pötzi\, Michael Ehrenreich\n\nWusstest du\, d
+ ass dein Auto\, wenn es **Car2X** über **ITS-G5** unterstützt\, bis zu 4
+  mal pro Sekunde die exakte GPS-Position\, Geschwindigkeit\, Längs- und Q
+ uerbeschleunigung\, Pedalstellungen\, Länge + Breite und vieles mehr unve
+ rschlüsselt auf einem 5-GHz-Band überträgt?\n\nAuch die Straßenbahnen 
+ in Graz senden diese Daten\, und sogar ihre Liniennummer. Damit können wi
+ r die Garnituren live tracken und in einer Karte anzeigen.\n\nViele Ampeln
+  in Graz unterstützen mittlerweile **C-ITS** und senden sekündlich Daten
+  über den genauen Aufbau der Fahrstreifen und den exakten Zustand der Sig
+ nale\, sowie wann die nächste Phase zu erwarten ist.\n\nMit einem **ESP32
+ -C5** können wir diese Daten bereits aus einigen hundert Metern Entfernun
+ g empfangen.\n\nWir zeigen euch\, wie wir diese Daten erfassen und verarbe
+ iten. Auf einer Live-Karte könnt ihr (im Abdeckungsbereich) Straßenbahne
+ n sehen\, die Farbe der Ampeln und wann diese das nächste Mal umschalten\
+ , und welche Autos mit Car2X gerade wie schnell fahren.\n\nMit Grafana zei
+ gen wir historische Daten der Ampelschaltungen und Statistiken\, etwa zu W
+ artezeiten an  Fußgängerübergängen und Autospuren. Wir geben euch auch
+  Zugriff auf die gesammelten Daten für eigene Auswertungen.\n\nUm die Abd
+ eckung zu verbessern\, benötigen wir eure Unterstützung! Wir haben eine 
+ Platine mit **ESP32-C5** und **PoE** gebaut\, mit der ihr selbst **C-ITS**
+ -Pakete erfassen könnt\, und uns für unsere offene Karte zur Verfügung 
+ stellen\, oder selbst verarbeiten könnt.\n\nLink: https://pretalx.linuxta
+ ge.at/glt26/talk/SRQ3M9/
+LOCATION:HS i7
+URL:https://pretalx.linuxtage.at/glt26/talk/SRQ3M9/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Gerätesicherheit verstehen: Verschlüsselung\, Integrität und de
+ r Einsatz in der Praxis
+DTSTART;TZID=Europe/Vienna:20260411T134500
+DTEND;TZID=Europe/Vienna:20260411T141000
+DTSTAMP:20260413T155744Z
+UID:VWYMVR@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Richard Weinberger\n\nFull-Disk-Encryption (FDE) geh
+ ört bei vielen Linux-Distributionen inzwischen  \nzur Grundausstattung. A
+ ber wogegen schützt sie tatsächlich? Welche Rolle  \nspielt Datenintegri
+ tät\, wie hilft ein ein TPM-Chip dabei\, und wie kann ein  \nembedded Sys
+ tem verschlüsselt sein\, ohne dass beim Bootvorgang ein Passwort  \neinge
+ geben werden muss? Und was ist eigentlich eine Evil-Maid?\nDiese und viele
+  weitere Fragen behandelt Richard in seinem Vortrag zur  \nGerätesicherhe
+ it. Ziel ist einen Überblick vom Technologiestack zu bekommen  \nund zu v
+ erstehen welche Bedrohungsszenarien wodurch verhindert werden  \nkönnen.\
+ n\nLink: https://pretalx.linuxtage.at/glt26/talk/VWYMVR/
+LOCATION:HS i7
+URL:https://pretalx.linuxtage.at/glt26/talk/VWYMVR/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Lightning Talks
+DTSTART;TZID=Europe/Vienna:20260411T160000
+DTEND;TZID=Europe/Vienna:20260411T164500
+DTSTAMP:20260413T155744Z
+UID:WUL3HV@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Bernhard "Slash" Trummer\n\nKurzvorträge (max. 5 mi
+ n) zu verschiedenen Themen.\n\nQuick talks (max. 5 min) about different to
+ pics.\n\n---\n\n- Wenn Du einen Lightning Talk halten möchtest\, dann mel
+ de Dich bitte via Email (lightning@linuxtage.at).\n- Um in der vorhandenen
+  Zeit möglichst viele Talks durchführen zu können\, bitten wir Dich\, D
+ eine Folien (bzw. einen Download-Link) an die gleiche Email-Adresse zu sen
+ den.\n- Das Zeitlimit pro Vortrag wird 5 Minuten sein.\n- Deine Slides mü
+ ssen auf einem Standard Ubuntu Laptop "abspielbar" sein:\n  - D.h. am best
+ en ein PDF\n  - oder als ZIP mit Bildern bzw. Videos (als Slideshow)\n  - 
+ oder in Libreoffice\n- Für die Reihenfolge der Vorträge gilt:\n  - die R
+ eihenfolge des Email-Einganges (first come\, first serve)\n  - Erst danach
+  spontane Talks aus dem Publikum\, bzw. Talks mit eigenem Laptop.\n  - Tal
+ ks\, die nicht auf Video aufgezeichnet werden sollen.\n\n**Bitte beachte**
+ : Die Lightning Talks werden aufgezeichnet und gestreamt! Falls du das nic
+ ht möchtest\, müssen wir dich bitten\, von einem Lightning Talk abzusehe
+ n.\n\n--\n\n- If you want to do a lightning talk\, then please contact us 
+ via eMail (lightning@linuxtage.at)\n- In order to perform as many talks as
+  possible\, we kindly ask you to provide your slides (or a download link) 
+ to the same email address.\n- The time limit for each talk is 5 minutes.\n
+ - Your slides must be "playable" on a standard Ubuntu laptop\n  - best wou
+ ld be a PDF\n  - or a ZIP containing images and videos (slideshow)\n  - or
+  via libreoffice\n- The sequence of talks is determined as follows:\n  - t
+ he sequence of the incoming emails (first come\, first serve)\n  - then pe
+ ople from the audience may do spontaneous talks\, optionally using the own
+  laptop.\n  - finally\, talks that shall not be recorded.\n\n**Please note
+ **: Our Lightning Talks are being streamed and recorded. If you don't want
+  that\, we have to ask you to not present.\n\nLink: https://pretalx.linuxt
+ age.at/glt26/talk/WUL3HV/
+LOCATION:HS i2
+URL:https://pretalx.linuxtage.at/glt26/talk/WUL3HV/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Einführung in die GNU Emacs Plattform
+DTSTART;TZID=Europe/Vienna:20260410T130000
+DTEND;TZID=Europe/Vienna:20260410T140000
+DTSTAMP:20260413T155744Z
+UID:ZDZNEX@pretalx.linuxtage.at
+DESCRIPTION:Speakers: Karl Voit\n\nWer schon immer mal in das wohl vielfä
+ ltigst einsetzbare Werkzeug Emacs reinschnuppern wollte aber sich nicht se
+ lbst drübertraute\, hat nun die Möglichkeit\, die ersten Schritte gemein
+ sam in einem Workshop zu machen.\n\nWir werden das Tutorial des Emacs durc
+ hgehen und je nach Wunsch der Teilnehmer:innen danach abbiegen\, wohin wir
+  wollen.\n\n- Makros\n- eigene Funktionen schreiben\n- Konfigurationsverwa
+ ltung\n- Fehlersuche\n- Anpassungen\n- und sehr viel mehr\n\nEs wird auch 
+ einen Emacs Org-mode Workshop im Anschluss geben. Aus Sicht des Vortragend
+ en ergibt es sehr viel Sinn\, beide Worshops zu besuchen. Der Übergang wi
+ rd fließend sein.\n\nDie Teilnehmer:innen sind aufgefordert\, einen berei
+ ts installierten GNU Emacs auf ihren Notebooks mitzubringen. Wir gehen von
+  einer frischen Installation aus.\n\nShownotes werden nach dem Event unter
+  https://Karl-Voit.at/2026/04/10/GLT26-Emacs-Workshops veröffentlicht.\n\
+ nKarl hat schon in den 90ern mit Emacs erste Erfahrungen gesammelt und ist
+  ein international bekannter Blogger und Vortragender zu dem Themenkreis G
+ NU Emacs\, Org-mode und Personal Information Management im Allgemeinen:\n\
+ nSeine Emacs-Artikel: https://karl-voit.at/tags/emacs/\nEmacs ist so viel 
+ mehr als nur ein Texteditor: https://karl-voit.at/2015/10/23/Emacs-is-not-
+ just-an-editor/\nDer Einstieg in GNU Emacs und Org-mode: https://karl-voit
+ .at/2023/05/16/Emacs-Org-deutsch/\nHow to Start With Emacs Org Mode: https
+ ://karl-voit.at/2020/01/20/start-using-orgmode/\n\nSeit über einem vierte
+ l Jahrhundert nutzt Karl täglich den vim als auch den Emacs für seine Zw
+ ecke.\n\nLink: https://pretalx.linuxtage.at/glt26/talk/ZDZNEX/
+LOCATION:HS i11
+URL:https://pretalx.linuxtage.at/glt26/talk/ZDZNEX/
+END:VEVENT
+END:VCALENDAR
